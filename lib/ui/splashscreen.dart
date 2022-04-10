@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:belajar_flutter/ui/homescreen.dart';
+import 'package:belajar_flutter/ui/loginscreen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -51,6 +53,13 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigateToHome() async {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Homescreen()));
+    final prefs = await SharedPreferences.getInstance();
+    print("cek email pref : "+prefs.getString("email").toString());
+
+    if(prefs.getString("email").toString() != "null") {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Homescreen()));
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Loginscreen()));
+    }
   }
 }
