@@ -1,4 +1,5 @@
 import 'package:belajar_flutter/ui/loginscreen.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,6 +11,10 @@ class Homescreen extends StatefulWidget {
 }
 
 class _HomescreenState extends State<Homescreen> {
+  DatabaseReference ref = FirebaseDatabase.instance.ref();
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,7 +1,10 @@
+
 import 'package:belajar_flutter/ui/homescreen.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({Key? key}) : super(key: key);
@@ -13,7 +16,18 @@ class Loginscreen extends StatefulWidget {
 class _LoginscreenState extends State<Loginscreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController pswController = TextEditingController();
+  final databaseRef = FirebaseDatabase.instance;
 
+  @override
+  void initState() {
+    _initializeFirebase();
+    super.initState();
+  }
+
+  Future<FirebaseApp> _initializeFirebase() async {
+    FirebaseApp firebaseApp = await Firebase.initializeApp();
+    return firebaseApp;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +82,22 @@ class _LoginscreenState extends State<Loginscreen> {
     var email = emailController.text.toString();
     var psw = pswController.text.toString();
 
-    print("email : "+ email);
-    print("psw : "+ psw);
+    var dataUser = {
+      "email": "lasdkfcnsl",
+      "nama": "slkdmcs",
+      "nohp": "sldkf",
+      "ttl" : "osamdclkds"
+    };
+
+
+    final DatabaseReference userRef = FirebaseDatabase.instance.ref("users").child('wistawan');
+    userRef.set(dataUser);
+
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    final CollectionReference _mainCollection = _firestore.collection('wisatawan');
+    _mainCollection.add(dataUser).then((value) => {
+      print("Sukses!"+ value.id)
+    });
 
     final prefs = await SharedPreferences.getInstance();
     if(email.isNotEmpty && psw.isNotEmpty) {
@@ -79,4 +107,6 @@ class _LoginscreenState extends State<Loginscreen> {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Homescreen()));
     }
   }
+
+
 }
