@@ -16,17 +16,13 @@ class Loginscreen extends StatefulWidget {
 class _LoginscreenState extends State<Loginscreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController pswController = TextEditingController();
-  final databaseRef = FirebaseDatabase.instance;
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference users = FirebaseFirestore.instance.collection('wisatawan');
 
   @override
   void initState() {
-    _initializeFirebase();
     super.initState();
-  }
-
-  Future<FirebaseApp> _initializeFirebase() async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
-    return firebaseApp;
   }
 
   @override
@@ -82,31 +78,25 @@ class _LoginscreenState extends State<Loginscreen> {
     var email = emailController.text.toString();
     var psw = pswController.text.toString();
 
-    var dataUser = {
-      "email": "lasdkfcnsl",
-      "nama": "slkdmcs",
-      "nohp": "sldkf",
-      "ttl" : "osamdclkds"
-    };
-
-
-    final DatabaseReference userRef = FirebaseDatabase.instance.ref("users").child('wistawan');
-    userRef.set(dataUser);
-
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    final CollectionReference _mainCollection = _firestore.collection('wisatawan');
-    _mainCollection.add(dataUser).then((value) => {
-      print("Sukses!"+ value.id)
-    });
-
     final prefs = await SharedPreferences.getInstance();
     if(email.isNotEmpty && psw.isNotEmpty) {
       prefs.setString("email", email);
+      addUser();
 
       //masuk home
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Homescreen()));
     }
   }
 
+  Future<void> addUser() {
+    var dataUser = {
+      "email": "akbar@gmail.com",
+      "nama": "Akbar",
+      "nohp": "085340849344",
+      "ttl" : "2022-08-22"
+    };
+
+    return users.add(dataUser).then((value) => print("User Added")).catchError((error) => print("Failed to add user: $error"));
+  }
 
 }

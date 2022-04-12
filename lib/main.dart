@@ -18,7 +18,8 @@ void main() async {
   );
 
   if (shouldUseFirestoreEmulator) {
-    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+    //FirebaseFirestore.instance.useFirestoreEmulator('10.0.2.2', 80);
+    FirebaseFirestore.instance.settings = const Settings(host: 'localhost:8080', sslEnabled: false, persistenceEnabled: false);
   }
 
   runApp(
